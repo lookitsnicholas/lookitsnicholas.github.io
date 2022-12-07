@@ -1,0 +1,15 @@
+.editor-outline-node-block {
+
+	.metadata-block {
+		display: flex;
+
+		&.isParent {
+			cursor: pointer;
+		}
+
+		.noChildren {
+			margin: 0 0 2px 6px;
+		}
+	}
+
+}

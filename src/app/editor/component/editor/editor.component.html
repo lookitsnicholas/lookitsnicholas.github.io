@@ -1,0 +1,100 @@
+<div class="fp fc" *ngFor="let selectedTheme of [(themeMap[currentTheme] || lightTheme)]">
+	<mat-toolbar [style.background]="selectedTheme.toolbar" [style.color]="selectedTheme.text">
+		<div class="fr toolbar-block">
+			<button (click)="drawer.toggle()" class="toggle-outline-button" mat-mini-fab tooltip="Outline">
+				<mat-icon>account_tree</mat-icon>
+			</button>
+			<span class="title">InspectElement</span>
+			<div class="fg tab-block">
+				<mat-tab-group [(selectedIndex)]="currentTabIndex" (selectedTabChange)="switchTab($event.index)">
+					<mat-tab *ngFor="let tabFilename of tabFilenames; let i = index">
+						<ng-template mat-tab-label>
+							<div [style.color]="selectedTheme.text">{{tabFilename}}</div>
+							<mat-icon (click)="removeTab($event, i)" *ngIf="(tabFilenames.length > 1)"
+								[style.color]="selectedTheme.text">close</mat-icon>
+						</ng-template>
+					</mat-tab>
+				</mat-tab-group>
+				<div class="fg new-tab-button-block">
+					<button class="new-tab-button" (click)="addTab()" color="primary" mat-mini-fab tooltip="New File">
+						<mat-icon>add</mat-icon>
+					</button>
+				</div>
+			</div>
+			<div class="fr select-controls">
+				<input id="upload-file-input" (input)="uploadFile($event)" type="file">
+				<button (click)="clickUploadFileInput()" color="primary" mat-mini-fab tooltip="Upload File">
+					<mat-icon>upload</mat-icon>
+				</button>
+				<button (click)="downloadFile()" color="primary" mat-mini-fab *ngIf="!!sourceStr"
+					tooltip="Download File">
+					<mat-icon>download</mat-icon>
+				</button>
+				<mat-form-field appearance="fill" class="theme-select">
+					<mat-label>Theme</mat-label>
+					<mat-select [(ngModel)]="currentTheme" (ngModelChange)="handleSourceStrParse()">
+						<mat-option *ngFor="let theme of themes" [value]="theme">
+							{{(ThemeAliases[theme] || "N/A")}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+				<mat-form-field appearance="fill" class="parser-language-select">
+					<mat-label>Language</mat-label>
+					<mat-select [(ngModel)]="currentParserLanguage" (ngModelChange)="handleSourceStrParse()">
+						<mat-option *ngFor="let parserLanguage of parserLanguages" [value]="parserLanguage">
+							{{(ParserLanguageAliases[parserLanguage] || "N/A")}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+	</mat-toolbar>
+	<mat-sidenav-container class="mat-sidenav-container-block">
+		<mat-sidenav mode="side" #drawer [style.background]="selectedTheme.toolbar" [style.color]="selectedTheme.text">
+			<ng-container *ngIf="!!outline">
+				<editor-outline-node [editorOutlineNode]="outline" (mouseover)="handleSubselectionMouseLeave($event)">
+				</editor-outline-node>
+			</ng-container>
+			<div *ngIf="!outline">Loading...</div>
+		</mat-sidenav>
+		<mat-sidenav-content>
+			<!-- <div class="editor-block fr fg" (mouseover)="handleSubselectionMouseLeave($event)"> -->
+			<div class="editor-block fr fg">
+				<div class="editor fc fg pane"
+					(click)="mergeSelectedNode($event, rowsAndColumns[(rowsAndColumns.length - 1)].editorNodes.length, (rowsAndColumns.length - 1))"
+					[style.background]="selectedTheme.background">
+					<ng-container *ngFor="let row of rowsAndColumns; let rowIndex = index">
+						<div class="fr row" (click)="mergeSelectedNode($event, row.editorNodes.length, rowIndex)"
+							*ngFor="let rowBackground of [((properties.selectedRowIndex === rowIndex) ? (isEditorFocused ? selectedTheme.selectedRowActivated : selectedTheme.selectedRowDeactivated) : selectedTheme.background)]"
+							[style.background]="rowBackground">
+							<div class="fr line-number-block" [style.background]="selectedTheme.toolbar">
+								<div class="fr line-number-overlay" [style.color]="selectedTheme.text">
+									<div class="row-index">{{(rowIndex + 1)}}</div>
+								</div>
+							</div>
+							<!-- <div class="node fr" [class.tab]="(node.data === '\t')"
+								(click)="mergeSelectedNode($event, (columnIndex + 1), rowIndex)"
+								(mouseover)="handleSubselectionMouseOver($event, node.elementNode)"
+								(mouseleave)="handleSubselectionMouseLeave($event)" -->
+							<div class="node fr" [class.tab]="(node.data === '\t')"
+								(click)="mergeSelectedNode($event, (columnIndex + 1), rowIndex)"
+								*ngFor="let node of row.editorNodes; let columnIndex = index; trackBy: nodeTrackBy"
+								[style.background]="rowBackground">
+								<span *ngIf="(node.data !== '\t')" [style.color]="node.colour">{{node.data}}</span>
+								<div class="cursor right"
+									*ngIf="((columnIndex === (properties.selectedColumnIndex - 1)) && isEditorFocused && (properties.selectedRowIndex === rowIndex))"
+									[style.background]="selectedTheme.cursor"></div>
+							</div>
+							<div class="cursor left"
+								*ngIf="(isEditorFocused && (properties.selectedRowIndex === rowIndex) && !properties.selectedColumnIndex)"
+								[style.background]="selectedTheme.cursor">
+							</div>
+						</div>
+					</ng-container>
+				</div>
+				<iframe class="fg pane" (click)="(isEditorFocused = false)"
+					[src]="('data:text/html,' + iframeSourceStr) | safe"></iframe>
+			</div>
+		</mat-sidenav-content>
+	</mat-sidenav-container>
+</div>

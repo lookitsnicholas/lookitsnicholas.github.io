@@ -1,0 +1,18 @@
+<div class="editor-outline-node-block" (click)="toggleIsExpanded($event)"
+	*ngFor="let isParent of [!!editorOutlineNode.children.length]">
+	<div class="metadata-block" [class.isParent]="isParent"
+		(mouseover)="handleSubselectionMouseOver($event, editorOutlineNode)"
+		(mouseleave)="handleSubselectionMouseLeave($event)" [style.padding-left]="((depth * 8) + 'px')">
+		<mat-icon *ngIf="isParent">
+			{{(editorOutlineNode.isExpanded ? "expand_more" : "chevron_right")}}
+		</mat-icon>
+		<div [class.noChildren]="!isParent">
+			{{editorOutlineNode.element}}
+		</div>
+	</div>
+	<div *ngIf="editorOutlineNode.isExpanded">
+		<editor-outline-node [depth]="childDepth" [editorOutlineNode]="editorOutlineNodeChild"
+			*ngFor="let editorOutlineNodeChild of editorOutlineNode.children">
+		</editor-outline-node>
+	</div>
+</div>

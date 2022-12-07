@@ -1,0 +1,12 @@
+.app-frame {
+
+    display: flex;
+    flex-grow: column;
+
+    .router-outlet.block {
+        height: 0;
+        overflow: auto;
+        width: 0;
+    }
+
+}

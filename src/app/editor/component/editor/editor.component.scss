@@ -1,0 +1,126 @@
+.toolbar-block {
+	width: 100%;
+
+	.toggle-outline-button {
+		background-color: #000;
+		margin: auto 8px auto 0;
+		opacity: calc(2/3);
+	}
+
+	.title {
+		margin: auto 18px auto auto;
+		;
+	}
+
+	.tab-block {
+		display: flex;
+		width: 0;
+
+		mat-tab-group {
+			margin: 42px 0 0 0;
+			overflow: auto;
+		}
+
+		.new-tab-button-block {
+			display: flex;
+
+			.new-tab-button {
+				margin: auto 38px auto 18px;
+			}
+		}
+	}
+
+	.select-controls {
+		margin-top: 16px;
+
+		>button {
+			margin: 23px 8px auto 0
+		}
+
+		>input {
+			display: none;
+		}
+
+		.parser-language-select {
+			margin-left: 8px;
+			width: auto;
+		}
+	}
+}
+
+.mat-sidenav-container-block {
+	flex-grow: 1;
+
+	>mat-sidenav {
+		width: 250px;
+	}
+
+	.editor-block {
+		height: 100%;
+		width: 100%;
+
+		.editor {
+			height: 100%;
+			overflow: auto;
+
+
+			@keyframes cursor-blink {
+				0% {
+					opacity: 0;
+				}
+			}
+
+			.row {
+				min-height: 1.75em;
+				max-height: 1.75em;
+				position: relative;
+
+				>.line-number-block {
+					width: 50px;
+
+					>.line-number-overlay {
+						background: #0000000d;
+						height: 100%;
+						width: 100%;
+
+						>.row-index {
+							margin: auto 4px auto auto;
+						}
+					}
+				}
+
+				.node {
+					position: relative;
+					white-space: pre;
+
+					&.tab {
+						max-width: 38px;
+						min-width: 38px;
+					}
+				}
+			}
+
+			.cursor {
+				animation: cursor-blink 0.75s steps(2) infinite;
+				display: inline-block;
+				height: 100%;
+				position: absolute;
+				width: 2px;
+
+				&.left {
+					left: 50px;
+				}
+
+				&.right {
+					right: -1px;
+				}
+			}
+		}
+	}
+}
+
+.pane {
+	border: 0;
+	min-width: 50%;
+	max-width: 50%;
+}
