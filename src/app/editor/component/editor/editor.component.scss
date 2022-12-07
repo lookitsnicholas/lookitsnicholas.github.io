@@ -93,6 +93,10 @@
 					position: relative;
 					white-space: pre;
 
+					>* {
+						margin: auto 0;
+					}
+
 					&.tab {
 						max-width: 38px;
 						min-width: 38px;
